@@ -1,0 +1,6 @@
+pandas
+matplotlib
+nltk
+rake-nltk
+requests
+seaborn
