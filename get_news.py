@@ -7,18 +7,16 @@ import pandas as pd
 from rake_nltk import Rake
 import requests
 import seaborn as sns
-# from nltk import ne_chunk, pos_tag
-# from nltk.tokenize import word_tokenize
+from nltk import ne_chunk, pos_tag
+from nltk.tokenize import word_tokenize
 import matplotlib.dates as md
 import numpy as np
 
-import nltk; nltk.download('stopwords')
-
-# import RAKE
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
-# nltk.download('maxent_ne_chunker')
-# nltk.download('words')
+import RAKE
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 sns.set(color_codes=True)
 sns.set_style("darkgrid")
 import os.path
@@ -30,9 +28,9 @@ except NameError:
     to_unicode = str
 
 # Get price curve
-if os.path.isfile('/Users/chenxue/coding/annotation/price_curve.json'):
+if os.path.isfile('/Users/xuechen/coding/annotation/price_curve.json'):
     # Read JSON file
-    with open('/Users/chenxue/coding/annotation/price_curve.json') as data_file:
+    with open('/Users/xuechen/coding/annotation/price_curve.json') as data_file:
         price_json = json.load(data_file)
 else:
     url_3 = 'https://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_BTC_USD/history?period_id=1min&time_start=2018-06-06&limit=100000'
@@ -40,7 +38,7 @@ else:
     price_response = requests.get(url_3, headers=headers)
     price_json = price_response.json()
     # Write JSON file
-    with io.open('/Users/chenxue/coding/annotation/price_curve.json', 'w', encoding='utf8') as outfile:
+    with io.open('/Users/xuechen/coding/annotation/price_curve.json', 'w', encoding='utf8') as outfile:
         str_ = json.dumps(price_json, indent=4, sort_keys=True,
                 separators=(',', ': '), ensure_ascii=False)
         outfile.write(to_unicode(str_))
@@ -67,40 +65,46 @@ ax=plt.gca()
 xfmt = md.DateFormatter('%Y-%m-%d %H:%M:%S')
 ax.xaxis.set_major_formatter(xfmt)
 plt.xticks(rotation=25)
-plt.show()
 
 
 # Get news
-if os.path.isfile('/Users/chenxue/coding/annotation/news.json'):
+if os.path.isfile('/Users/xuechen/coding/annotation/news.json'):
     # Read JSON file
-    with open('/Users/chenxue/coding/annotation/news.json') as data_file:
+    with open('/Users/xuechen/coding/annotation/news.json') as data_file:
         res_json = json.load(data_file)
 else:
     url = 'https://cryptopanic.com/api/posts/?auth_token=7ad13cff4a303a55ce9c791aa0143a669c6ee1ce&metadata=true&filter=important'
     res = requests.get(url)
     res_json = res.json()
     # Write JSON file
-    with io.open('/Users/chenxue/coding/annotation/news.json', 'w', encoding='utf8') as outfile:
+    with io.open('/Users/xuechen/coding/annotation/news.json', 'w', encoding='utf8') as outfile:
         str_ = json.dumps(res_json, indent=4, sort_keys=True,
                 separators=(',', ': '), ensure_ascii=False)
         outfile.write(to_unicode(str_))
 
 df = []
-# Rake = RAKE.Rake(RAKE.SmartStopList())
-r = Rake() # Uses stopwords for english from NLTK, and all puntuation characters.
+Rake = RAKE.Rake(RAKE.SmartStopList())
 
 for news in res_json['results']:   # news['url']
     try:
         desc = news['metadata']['description'].replace('<p>', '').replace('</p>', '').replace('...', '').replace('\n', '').replace('[&#8230;]', '').replace('&nbsp;', '').replace('&#8221;', '').replace('&#160', '').replace('&#8217;', '').replace('&#8220;', '').replace('&#8217;','')
-        df_ele = [news['published_at'], ". ".join([news['title'], desc])]
+        df_ele = [news['published_at'][:19], news['title'], desc, ". ".join([news['title'], desc])]
+        print("-Title: %s" % df_ele[1])
+        print("-Description: %s" % df_ele[2])
+        print("-Keywords from title: %s" % Rake.run(df_ele[1], maxWords=3))
+        print("-Keywords from description: %s" % Rake.run(df_ele[2], maxWords=3))
+        print("-Keywords from title & description : %s" % Rake.run(df_ele[3], maxWords=3))
+        print('\n')
     except:
-        df_ele = [news['published_at'], news['title']]
-    df.append(df_ele)
-    print(df_ele)
-    # print("title: %s" % Rake.run(news['title'], maxWords=3))
-    # print("tit+des: %s" % Rake.run(df_ele[1], maxWords=3))
-    r.extract_keywords_from_text(news['title'])    # df_ele[1]
-    r.get_ranked_phrases_with_score() # To get keyword phrases ranked highest to lowest.
-    print('\n')
+        df_ele = [news['published_at'][:19], news['title']]
+        print("-Title: %s" % df_ele[1])
+        print("-Keywords from title: %s" % Rake.run(df_ele[1], maxWords=3))
+        print('\n')
+    # df.append(df_ele)
+    date_time_marked = datetime.strptime(news['published_at'][:19], "%Y-%m-%dT%H:%M:%S") 
+    plt.plot([date_time_marked, date_time_marked], [7450, 7700], linestyle="--", color="red")
 
-df_clean = pd.DataFrame(df, columns=['date', 'title'])
+
+# df_clean = pd.DataFrame(df, columns=['date', 'title'])
+
+plt.show()
