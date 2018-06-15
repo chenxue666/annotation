@@ -33,8 +33,8 @@ if os.path.isfile('/Users/xuechen/coding/annotation/price_curve.json'):
     with open('/Users/xuechen/coding/annotation/price_curve.json') as data_file:
         price_json = json.load(data_file)
 else:
-    url_3 = 'https://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_BTC_USD/history?period_id=1min&time_start=2018-06-06&limit=100000'
-    headers = {'X-CoinAPI-Key': 'CB1CD407-B308-4A71-B1B6-B43CEE1B7250'}
+    url_3 = 'https://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_BTC_USD/history?period_id=1min&time_start=2018-06-14&limit=100000'
+    headers = {'X-CoinAPI-Key': 'BE597240-9259-4526-A8EB-E0E46E1B828D'}
     price_response = requests.get(url_3, headers=headers)
     price_json = price_response.json()
     # Write JSON file
@@ -52,7 +52,7 @@ for endpoint in price_json:
     df_price.append(df_tmp)
 
 df_price_clean = pd.DataFrame(df_price, columns=['time_period_start', 'time_period_end', 'price_close', 'price_high', 'price_low', 'price_open'])
-df_price_20180606 = df_price_clean[df_price_clean['time_period_end'] <= datetime.strptime("2018-06-07T00:00:00", "%Y-%m-%dT%H:%M:%S")]
+df_price_20180606 = df_price_clean[df_price_clean['time_period_end'] <= datetime.strptime("2018-06-15T00:00:00", "%Y-%m-%dT%H:%M:%S")]
 for ind, row in df_price_20180606.iterrows():
     midpoint = row['time_period_start'] + timedelta(seconds = 30)
     plt.plot([midpoint, midpoint], [row['price_low'], row['price_high']], linewidth=1, color='k')
@@ -66,14 +66,13 @@ xfmt = md.DateFormatter('%Y-%m-%d %H:%M:%S')
 ax.xaxis.set_major_formatter(xfmt)
 plt.xticks(rotation=25)
 
-
 # Get news
 if os.path.isfile('/Users/xuechen/coding/annotation/news.json'):
     # Read JSON file
     with open('/Users/xuechen/coding/annotation/news.json') as data_file:
         res_json = json.load(data_file)
 else:
-    url = 'https://cryptopanic.com/api/posts/?auth_token=7ad13cff4a303a55ce9c791aa0143a669c6ee1ce&metadata=true&filter=important'
+    url = 'https://cryptopanic.com/api/posts/?auth_token=7ad13cff4a303a55ce9c791aa0143a669c6ee1ce&metadata=true&filter=bullish|bearish'
     res = requests.get(url)
     res_json = res.json()
     # Write JSON file
@@ -102,7 +101,7 @@ for news in res_json['results']:   # news['url']
         print('\n')
     # df.append(df_ele)
     date_time_marked = datetime.strptime(news['published_at'][:19], "%Y-%m-%dT%H:%M:%S") 
-    plt.plot([date_time_marked, date_time_marked], [7450, 7700], linestyle="--", color="red")
+    plt.plot([date_time_marked, date_time_marked], [6300, 6700], linestyle="--", color="red")
 
 
 # df_clean = pd.DataFrame(df, columns=['date', 'title'])
