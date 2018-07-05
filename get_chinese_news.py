@@ -14,7 +14,7 @@ if os.path.isfile(home + '/coding/annotation/chinese_news.pkl'):
 else:
     records_complete = []
     page = 1
-    while page <= 10:
+    while page <= 100:
         url = 'https://api.apishop.net/common/coin/searchNews?apiKey=SeiykRj6e0d0ccc2e6011e45e785523e5f583d2a5cd1550&keyword=BTC&page=' + str(page)  # important, rising, hot, bullish, bearish
         print(url)
         page = page + 1
