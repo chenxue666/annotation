@@ -19,10 +19,10 @@ sns.set_style("darkgrid")
 
 home = str(Path.home())
 
-with open(home + "/coding/annotation/price0205_0414.json") as data_file:
+with open(home + "/coding/annotation/data/price0205_0414.json") as data_file:
     price_json = json.load(data_file)
 
-with open(home + "/coding/annotation/processed_chinese_news.pkl", "rb") as data_file:
+with open(home + "/coding/annotation/data/processed_chinese_news.pkl", "rb") as data_file:
     processed_news = pickle.load(data_file)
 
 size = len(processed_news)
@@ -30,7 +30,7 @@ size = len(processed_news)
 print("共有2018-02-05至2018-07-05总计" + str(size) + "条新闻，结果会自动保存到result.csv中，标注累了可以开着terminal放在那儿不管，什么时候想回来继续标注了就继续，一旦退出再进来就要从头开始标注")
 input("Press Enter to continue...")
 
-with open("result.csv", "w") as csvfile:
+with open(home + "/coding/annotation/result/result.csv", "w") as csvfile:
     fieldnames = ["id", "influential", "keywords"]
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
@@ -62,6 +62,7 @@ with open("result.csv", "w") as csvfile:
         df_price = []
         df_price_dict = []
         fig, ax = plt.subplots(figsize=(8, 5))
+        
         time = "2018-04-02 12:45:33"
 
         time_window = [

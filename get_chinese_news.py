@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 home = str(Path.home())
 
-if os.path.isfile(home + '/coding/annotation/chinese_news.pkl'):
+if os.path.isfile(home + '/coding/annotation/data/chinese_news.pkl'):
     # Read pickle
-    with open(home + '/coding/annotation/chinese_news.pkl', 'rb') as data_file:
+    with open(home + '/coding/annotation/data/chinese_news.pkl', 'rb') as data_file:
         records_complete = pickle.load(data_file)
 else:
     records_complete = []
@@ -25,14 +25,14 @@ else:
         records = res_json['result']['newsList']
         records_complete.extend(records)
     # Write into pickle
-    with open(home + '/coding/annotation/chinese_news.pkl', 'wb') as data_file:
+    with open(home + '/coding/annotation/data/chinese_news.pkl', 'wb') as data_file:
         pickle.dump(records_complete, data_file)
 
 
 # process chinese news
-if os.path.isfile(home + '/coding/annotation/processed_chinese_new.pkl'):
+if os.path.isfile(home + '/coding/annotation/data/processed_chinese_new.pkl'):
     # Read pickle
-    with open(home + '/coding/annotation/processed_chinese_news.pkl', 'rb') as data_file_2:
+    with open(home + '/coding/annotation/data/processed_chinese_news.pkl', 'rb') as data_file_2:
         processed_chinese_news = pickle.load(data_file_2)
 else:
     df_ele = []
@@ -46,7 +46,7 @@ else:
 
     df = pd.DataFrame(df_ele, columns=['id', 'time', 'title', 'content'])
     # Write into pickle
-    with open(home + '/coding/annotation/processed_chinese_news.pkl', 'wb') as data_file_2:
+    with open(home + '/coding/annotation/data/processed_chinese_news.pkl', 'wb') as data_file_2:
         pickle.dump(df, data_file_2)
 
 
@@ -58,9 +58,9 @@ else:
 # url = jinsestr + "?" + s + "sign=" + sign
 # print(url)
 
-# if os.path.isfile(home + '/coding/annotation/jinse_chinese_news.pkl'):
+# if os.path.isfile(home + '/coding/annotation/data/jinse_chinese_news.pkl'):
 #     # Read pickle
-#     with open(home + '/coding/annotation/jinse_chinese_news.pkl', 'rb') as data_file:
+#     with open(home + '/coding/annotation/data/jinse_chinese_news.pkl', 'rb') as data_file:
 #         records_complete = pickle.load(data_file)
 # else:
 #     records_complete = []
@@ -74,5 +74,5 @@ else:
 #         records = res_json['result']['newsList']
 #         records_complete.extend(records)
 #     # Write into pickle
-#     with open(home + '/coding/annotation/chinese_news.pkl', 'wb') as data_file:
+#     with open(home + '/coding/annotation/data/chinese_news.pkl', 'wb') as data_file:
 #         pickle.dump(records_complete, data_file)
