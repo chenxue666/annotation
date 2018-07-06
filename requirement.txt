@@ -4,3 +4,7 @@ nltk
 rake-nltk
 requests
 seaborn
+textrank4zh
+pickle
+csv
+pathlib

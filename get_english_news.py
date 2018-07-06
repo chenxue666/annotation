@@ -31,7 +31,39 @@ except NameError:
 from pathlib import Path
 home = str(Path.home())
 
-current_date = "2018-06-14"
+##########
+### run 3 parts, and then combine them
+
+# start_date = "2018-02-05"
+# end_date = "2018-04-14"
+
+# # start_date = "2018-04-15"
+# # end_date = "2018-06-14"
+
+# # start_date = "2018-06-15"
+# # end_date = "2018-07-06"
+
+# # next_date = (datetime.strptime(current_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+
+# # Get price curve
+# if os.path.isfile(home + '/coding/annotation/price_234.json'):
+#     # Read JSON file
+#     with open(home + '/coding/annotation/price_234.json') as data_file:
+#         price_json = json.load(data_file)
+# else:
+#     url_3 = 'https://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_BTC_USD/history?period_id=1min&time_start='+start_date+'&time_end='+end_date+'&limit=100000'
+#     headers = {'X-CoinAPI-Key': 'BE597240-9259-4526-A8EB-E0E46E1B828D'}
+#     price_response = requests.get(url_3, headers=headers)
+#     price_json = price_response.json()
+#     # Write JSON file
+#     with io.open(home + '/coding/annotation/price_234.json', 'w', encoding='utf8') as outfile:
+#         str_ = json.dumps(price_json, indent=4, sort_keys=True,
+#                 separators=(',', ': '), ensure_ascii=False)
+#         outfile.write(to_unicode(str_))
+
+##########
+
+current_date = "2018-06-17"
 next_date = (datetime.strptime(current_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
 # Get price curve
@@ -85,9 +117,9 @@ plt.xlim(min(df_price_clean['time_period_start']), max(df_price_clean['time_peri
 
 
 # Get news
-if os.path.isfile(home + '/coding/annotation/news.pkl'):
+if os.path.isfile(home + '/coding/annotation/news_hot.pkl'):
     # Read pickle
-    with open(home + '/coding/annotation/news.pkl', 'rb') as data_file:
+    with open(home + '/coding/annotation/news_hot.pkl', 'rb') as data_file:
         records_complete = pickle.load(data_file)
 else:
     records_complete = []
